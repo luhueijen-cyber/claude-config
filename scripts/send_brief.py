@@ -20,8 +20,8 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
-SENDER    = os.getenv("BRIEF_SENDER", "luhueijen@shsh.ylc.edu.tw")
-RECIPIENT = "luhueijen@gmail.com"
+SENDER     = os.getenv("BRIEF_SENDER", "luhueijen@shsh.ylc.edu.tw")
+RECIPIENTS = ["luhueijen@shsh.ylc.edu.tw", "luhueijen@gmail.com"]
 TODO_PATH = Path("~/todo.md").expanduser()
 
 WEEKDAYS = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
@@ -66,16 +66,16 @@ def send(password: str):
 
     msg = MIMEMultipart("alternative")
     msg["From"]    = SENDER
-    msg["To"]      = RECIPIENT
+    msg["To"]      = ", ".join(RECIPIENTS)
     msg["Subject"] = subject
     msg.attach(MIMEText(build_html(), "html", "utf-8"))
 
     print(f"正在連接 Gmail SMTP…")
     with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
         smtp.login(SENDER, password)
-        smtp.sendmail(SENDER, RECIPIENT, msg.as_bytes())
+        smtp.sendmail(SENDER, RECIPIENTS, msg.as_bytes())
     print(f"✅ 已寄出：{subject}")
-    print(f"   收件人：{RECIPIENT}")
+    print(f"   收件人：{', '.join(RECIPIENTS)}")
 
 
 if __name__ == "__main__":
