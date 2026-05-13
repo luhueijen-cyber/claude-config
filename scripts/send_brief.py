@@ -20,7 +20,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
-SENDER    = "luhueijen@gmail.com"
+SENDER    = os.getenv("BRIEF_SENDER", "luhueijen@shsh.ylc.edu.tw")
 RECIPIENT = "luhueijen@gmail.com"
 TODO_PATH = Path("~/todo.md").expanduser()
 
