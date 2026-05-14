@@ -2,7 +2,7 @@ name: Daily Brief
 
 on:
   schedule:
-    # 06:30 Asia/Taipei = 22:30 UTC
+    # 06:30 Asia/Taipei = 22:30 UTC（前一個 UTC 日）
     - cron: "30 22 * * *"
   workflow_dispatch: {}
 
@@ -19,14 +19,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install tzdata
-        run: pip install tzdata
-
-      - name: Copy todo.md to home directory
-        run: cp todo.md ~/todo.md
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 tzdata
 
       - name: Send daily brief
         env:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           BRIEF_SENDER: luhueijen@shsh.ylc.edu.tw
+          # 選用：設定後可自動讀取 Google 行事曆
+          # GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
+          # CALENDAR_ID: luhueijen@gmail.com
         run: python scripts/send_brief.py
