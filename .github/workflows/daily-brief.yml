@@ -20,7 +20,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 tzdata
+        run: pip install requests beautifulsoup4 tzdata yfinance
 
       - name: Send daily brief
         env:
