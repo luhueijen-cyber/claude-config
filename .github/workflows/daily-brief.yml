@@ -25,7 +25,7 @@ jobs:
       - name: Send daily brief
         env:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
-          BRIEF_SENDER: luhueijen@shsh.ylc.edu.tw
+          BRIEF_SENDER: luhueijen@gmail.com
           # 選用：設定後可自動讀取 Google 行事曆
           # GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
           # CALENDAR_ID: luhueijen@gmail.com
