@@ -252,27 +252,29 @@ def get_stock_data() -> tuple:
         except Exception as e:
             print(f"[WARN] 股市 {name}: {e}", file=sys.stderr)
 
-    # 財經要聞
+    # 財經要聞（Google News RSS，繁體中文）
     news = []
-    for sym in ["^TWII", "^GSPC", "^DJI"]:
-        try:
-            raw = yf.Ticker(sym).news or []
-            for item in raw:
-                title = ""
-                if isinstance(item, dict):
-                    title = (item.get("title") or
-                             (item.get("content") or {}).get("title", "")
-                             if isinstance(item.get("content"), dict) else "")
+    try:
+        import xml.etree.ElementTree as ET
+        query   = requests.utils.quote("台股 美股 財經")
+        rss_url = (f"https://news.google.com/rss/search?q={query}"
+                   f"&hl=zh-TW&gl=TW&ceid=TW:zh-Hant")
+        rr = requests.get(rss_url, headers=BOT_HDR, timeout=15)
+        if rr.status_code == 200:
+            root = ET.fromstring(rr.content)
+            for item in root.findall(".//item"):
+                title = item.findtext("title", "").strip()
+                # 移除結尾的「 - 來源名稱」
+                if " - " in title:
+                    title = title.rsplit(" - ", 1)[0].strip()
                 if title and title not in news:
                     news.append(title)
-                if len(news) >= 5:
+                if len(news) >= 3:
                     break
-        except Exception as e:
-            print(f"[WARN] 財經新聞 {sym}: {e}", file=sys.stderr)
-        if len(news) >= 3:
-            break
+    except Exception as e:
+        print(f"[WARN] 財經要聞: {e}", file=sys.stderr)
 
-    return rows, news[:3]
+    return rows, news
 
 
 # ── 行事曆（Google Calendar 私密 iCal）──────────────────────────────────────
