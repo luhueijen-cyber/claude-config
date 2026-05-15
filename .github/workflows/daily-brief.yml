@@ -20,13 +20,14 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install requests beautifulsoup4 tzdata yfinance
+        run: pip install requests beautifulsoup4 tzdata yfinance icalendar recurring-ical-events
 
       - name: Send daily brief
         env:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           BRIEF_SENDER: luhueijen@shsh.ylc.edu.tw
-          # 選用：設定後可自動讀取 Google 行事曆
-          # GOOGLE_CREDENTIALS_JSON: ${{ secrets.GOOGLE_CREDENTIALS_JSON }}
-          # CALENDAR_ID: luhueijen@gmail.com
+          # Google Calendar 私密 iCal 網址（在 Google Calendar 設定頁取得）
+          CALENDAR_ICAL_URL: ${{ secrets.CALENDAR_ICAL_URL }}
+          # 個人 Gmail App Password（選用，設定後可讀取 luhueijen@gmail.com 信箱）
+          GMAIL_PERSONAL_APP_PASSWORD: ${{ secrets.GMAIL_PERSONAL_APP_PASSWORD }}
         run: python scripts/send_brief.py
