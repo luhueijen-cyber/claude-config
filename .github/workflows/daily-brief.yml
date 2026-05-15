@@ -2,8 +2,8 @@ name: Daily Brief
 
 on:
   schedule:
-    # 06:30 Asia/Taipei = 22:30 UTC（前一個 UTC 日）
-    - cron: "30 22 * * *"
+    # 06:00 Asia/Taipei = 22:00 UTC（前一個 UTC 日）
+    - cron: "0 22 * * *"
   workflow_dispatch: {}
 
 jobs:
