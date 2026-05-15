@@ -155,9 +155,10 @@ def fetch_gospel(date: datetime) -> dict:
         r.raise_for_status()
         data = r.json()
 
-        reading1_ref  = data.get("reading1", "")
-        psalm_ref     = data.get("responsorial_psalm", "")
-        gospel_ref    = data.get("gospel", "")
+        readings      = data.get("readings", {})
+        reading1_ref  = readings.get("firstReading", "")
+        psalm_ref     = readings.get("psalm", "")
+        gospel_ref    = readings.get("gospel", "")
         season_en     = data.get("season", "")
         season        = SEASON_ZH.get(season_en, season_en)
 
