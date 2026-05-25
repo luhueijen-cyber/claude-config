@@ -265,7 +265,12 @@
     .weather-tip { margin-top: 10px; font-size: 11px; color: #555; background: var(--green-50); border-radius: 7px; padding: 8px 10px; border-left: 3px solid var(--green-300); }
 
     /* ── 換算工具 ── */
-    .rate-badge { display: inline-block; background: var(--green-100); color: var(--green-800); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-top: 6px; }
+    .rate-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .rate-label { color: rgba(255,255,255,0.8); font-size: 11px; }
+    .rate-input { width: 64px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; color: #fff; font-size: 13px; font-weight: 700; padding: 3px 7px; text-align: center; outline: none; }
+    .rate-input:focus { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.8); }
+    .rate-unit { color: rgba(255,255,255,0.8); font-size: 11px; }
+    .rate-hint { color: rgba(255,255,255,0.5); font-size: 10px; margin-left: 4px; }
     .conv-card { background: var(--card-bg); border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 16px; margin-bottom: 12px; }
     .conv-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
     .conv-input-row { display: flex; align-items: center; gap: 8px; }
@@ -775,8 +780,13 @@
     <div class="page-header">
       <div class="label">Currency</div>
       <h1>台幣 ⇄ 日圓</h1>
-      <div class="subtitle">即時匯率請出發前確認</div>
-      <div class="rate-badge" id="rate-display">載入中...</div>
+      <div class="subtitle">出發前更新匯率，換算更準確</div>
+      <div class="rate-row">
+        <span class="rate-label">1 TWD ≈</span>
+        <input class="rate-input" id="rate-input" type="number" inputmode="decimal" step="0.01" min="0.01">
+        <span class="rate-unit">JPY</span>
+        <span class="rate-hint">✏️ 可修改</span>
+      </div>
     </div>
     <div class="content-area">
 
@@ -888,7 +898,7 @@
 
       let rate = parseFloat(localStorage.getItem(RATE_KEY)) || DEFAULT_RATE;
 
-      const rateDisplay = document.getElementById('rate-display');
+      const rateInput = document.getElementById('rate-input');
       const inputTwd = document.getElementById('input-twd');
       const inputJpy = document.getElementById('input-jpy');
       const resultJpy = document.getElementById('result-jpy');
@@ -901,41 +911,51 @@
         return Math.round(n).toLocaleString();
       }
 
-      function renderRate() {
-        rateDisplay.textContent = '1 TWD ≈ ' + rate.toFixed(2) + ' JPY';
-      }
-
-      function renderQuick() {
+      function recalcAll() {
+        const twd = parseFloat(inputTwd.value);
+        const jpy = parseFloat(inputJpy.value);
+        resultJpy.innerHTML = (!isNaN(twd) && inputTwd.value !== '')
+          ? '¥' + fmt(twd * rate) + ' <span class="conv-result-unit">JPY</span>'
+          : '— <span class="conv-result-unit">JPY</span>';
+        resultTwd.innerHTML = (!isNaN(jpy) && inputJpy.value !== '')
+          ? 'NT$' + fmt(jpy / rate) + ' <span class="conv-result-unit">TWD</span>'
+          : '— <span class="conv-result-unit">TWD</span>';
         quickGrid.innerHTML = '';
         QUICK_AMOUNTS.forEach(jpy => {
-          const twd = (jpy / rate).toFixed(0);
           const el = document.createElement('div');
           el.className = 'quick-item';
-          el.innerHTML = '<div class="quick-jpy">¥' + fmt(jpy) + '</div><div class="quick-twd">≈ NT$' + fmt(twd) + '</div>';
+          el.innerHTML = '<div class="quick-jpy">¥' + fmt(jpy) + '</div><div class="quick-twd">≈ NT$' + fmt(jpy / rate) + '</div>';
           quickGrid.appendChild(el);
         });
       }
 
+      rateInput.value = rate.toFixed(2);
+      rateInput.addEventListener('change', () => {
+        const v = parseFloat(rateInput.value);
+        if (!isNaN(v) && v > 0) {
+          rate = v;
+          localStorage.setItem(RATE_KEY, rate);
+          recalcAll();
+        } else {
+          rateInput.value = rate.toFixed(2);
+        }
+      });
+
       inputTwd.addEventListener('input', () => {
         const v = parseFloat(inputTwd.value);
-        if (isNaN(v) || inputTwd.value === '') {
-          resultJpy.innerHTML = '— <span class="conv-result-unit">JPY</span>';
-        } else {
-          resultJpy.innerHTML = '¥' + fmt(v * rate) + ' <span class="conv-result-unit">JPY</span>';
-        }
+        resultJpy.innerHTML = (!isNaN(v) && inputTwd.value !== '')
+          ? '¥' + fmt(v * rate) + ' <span class="conv-result-unit">JPY</span>'
+          : '— <span class="conv-result-unit">JPY</span>';
       });
 
       inputJpy.addEventListener('input', () => {
         const v = parseFloat(inputJpy.value);
-        if (isNaN(v) || inputJpy.value === '') {
-          resultTwd.innerHTML = '— <span class="conv-result-unit">TWD</span>';
-        } else {
-          resultTwd.innerHTML = 'NT$' + fmt(v / rate) + ' <span class="conv-result-unit">TWD</span>';
-        }
+        resultTwd.innerHTML = (!isNaN(v) && inputJpy.value !== '')
+          ? 'NT$' + fmt(v / rate) + ' <span class="conv-result-unit">TWD</span>'
+          : '— <span class="conv-result-unit">TWD</span>';
       });
 
-      renderRate();
-      renderQuick();
+      recalcAll();
     })();
   </script>
 
