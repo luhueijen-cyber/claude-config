@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>2026 北海道旅遊手冊</title>
+  <style>
+    :root {
+      --green-900: #1b5e20;
+      --green-800: #2e7d32;
+      --green-700: #388e3c;
+      --green-500: #4caf50;
+      --green-400: #66bb6a;
+      --green-300: #81c784;
+      --green-200: #a5d6a7;
+      --green-100: #e8f5e9;
+      --green-50:  #f1f8e9;
+      --text-primary: #1b5e20;
+      --text-secondary: #388e3c;
+      --text-muted: #888;
+      --card-bg: #ffffff;
+      --page-bg: #f1f8e9;
+      --tab-height: 60px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 頁面區塊 ── */
+    .page {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+      padding-bottom: var(--tab-height);
+    }
+    .page.active { display: flex; }
+
+    /* ── Header ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--green-800), var(--green-700));
+      padding: 16px 16px 20px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .page-header .label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .page-header .subtitle {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* ── 卡片 ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .card-header {
+      background: var(--green-100);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-body { padding: 10px 12px; }
+
+    /* ── Bottom Tab Bar ── */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100vw;
+      max-width: 480px;
+      height: var(--tab-height);
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      z-index: 100;
+    }
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn .icon { font-size: 20px; }
+    .tab-btn .tab-label { font-size: 10px; color: #aaa; }
+    .tab-btn.active .tab-label { color: var(--green-500); font-weight: 700; }
+
+    /* ── 通用工具 ── */
+    .row { display: flex; gap: 8px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green-800);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .content-area { flex: 1; padding: 12px; background: var(--page-bg); overflow-y: auto; }
+
+    /* ── 統計徽章 ── */
+    .stat-badge {
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      text-align: center;
+      min-width: 52px;
+    }
+    .stat-num { color: #fff; font-size: 18px; font-weight: 700; }
+    .stat-label { color: rgba(255,255,255,0.75); font-size: 9px; margin-top: 1px; }
+
+    /* ── Day 卡片 ── */
+    .day-tag {
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--green-500);
+      flex-shrink: 0;
+    }
+    .day-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+    .day-card-body { padding: 10px 12px; }
+    .spot-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .spot-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .spot-name { font-size: 12px; font-weight: 600; color: #333; }
+    .spot-note { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+    .stay-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding-top: 8px;
+      margin-top: 8px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .tip { font-size: 10px; color: var(--green-500); margin-top: 3px; }
+    .hotel-card { border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .hotel-card.featured { border: 1.5px solid var(--green-300); box-shadow: 0 2px 10px rgba(76,175,80,0.2); }
+    .hotel-date-bar {
+      background: var(--green-100);
+      padding: 7px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hotel-date-bar.featured { background: linear-gradient(90deg, var(--green-500), var(--green-400)); }
+    .hotel-date { font-size: 11px; font-weight: 700; color: var(--green-900); }
+    .hotel-date-bar.featured .hotel-date { color: #fff; }
+    .hotel-nights {
+      font-size: 9px;
+      border: 1px solid var(--green-200);
+      color: var(--green-700);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .hotel-date-bar.featured .hotel-nights { border-color: rgba(255,255,255,0.6); color: #fff; }
+    .hotel-body { background: #fff; padding: 12px; }
+    .hotel-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .hotel-meta { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+    .hotel-feature { font-size: 11px; color: #555; margin-top: 6px; line-height: 1.6; }
+    .hotel-btns { display: flex; gap: 8px; margin-top: 10px; }
+    .hotel-btn {
+      flex: 1;
+      background: var(--green-50);
+      border: none;
+      border-radius: 7px;
+      padding: 7px;
+      font-size: 11px;
+      color: var(--green-800);
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+    }
+    .hotel-btn:active { background: var(--green-100); }
+
+    .progress-bar-wrap { margin-top: 10px; }
+    .progress-info { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .progress-info span { font-size: 10px; color: rgba(255,255,255,0.8); }
+    .progress-info strong { color: #fff; font-size: 10px; }
+    .progress-track { background: rgba(255,255,255,0.2); border-radius: 4px; height: 6px; }
+    .progress-fill { background: var(--green-200); border-radius: 4px; height: 6px; transition: width 0.3s ease; }
+    .bag-section-label { font-size: 10px; font-weight: 700; color: var(--green-800); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .bag-list { background: #fff; border-radius: 10px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .bag-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 12px;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bag-item:last-child { border-bottom: none; }
+    .bag-item.checked .bag-text { color: #bbb; text-decoration: line-through; }
+    .bag-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .bag-item.checked .bag-check { background: var(--green-500); border-color: var(--green-500); }
+    .bag-check-icon { color: #fff; font-size: 11px; display: none; }
+    .bag-item.checked .bag-check-icon { display: block; }
+    .bag-text { font-size: 12px; color: #333; }
+    .bag-tip { font-size: 10px; color: var(--green-500); margin-top: 2px; }
+
+    .weather-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .weather-city-bar { background: var(--green-100); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+    .weather-city { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .weather-dates { font-size: 10px; color: var(--text-muted); }
+    .weather-body { padding: 12px 14px; }
+    .weather-temp { font-size: 22px; font-weight: 700; color: var(--green-800); }
+    .weather-temp span { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .weather-item { background: var(--green-50); border-radius: 7px; padding: 7px 10px; }
+    .weather-item-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .weather-item-value { font-size: 12px; color: #333; margin-top: 2px; font-weight: 500; }
+    .weather-tip { margin-top: 10px; font-size: 11px; color: #555; background: var(--green-50); border-radius: 7px; padding: 8px 10px; border-left: 3px solid var(--green-300); }
+
+    /* ── 換算工具 ── */
+    .rate-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+    .rate-label { color: rgba(255,255,255,0.8); font-size: 11px; }
+    .rate-input { width: 64px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 6px; color: #fff; font-size: 13px; font-weight: 700; padding: 3px 7px; text-align: center; outline: none; }
+    .rate-input:focus { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.8); }
+    .rate-unit { color: rgba(255,255,255,0.8); font-size: 11px; }
+    .rate-hint { color: rgba(255,255,255,0.5); font-size: 10px; margin-left: 4px; }
+    .conv-card { background: var(--card-bg); border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 16px; margin-bottom: 12px; }
+    .conv-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .conv-input-row { display: flex; align-items: center; gap: 8px; }
+    .conv-currency { font-size: 18px; font-weight: 700; color: var(--green-800); min-width: 36px; }
+    .conv-input { flex: 1; border: 1.5px solid var(--green-200); border-radius: 8px; padding: 10px 12px; font-size: 20px; font-weight: 700; color: #333; background: var(--green-50); outline: none; width: 100%; }
+    .conv-input:focus { border-color: var(--green-500); background: #fff; }
+    .conv-arrow { text-align: center; font-size: 20px; color: var(--green-300); margin: 8px 0; }
+    .conv-result { font-size: 26px; font-weight: 700; color: var(--green-800); padding: 10px 12px; background: var(--green-50); border-radius: 8px; letter-spacing: 0.5px; }
+    .conv-result-unit { font-size: 13px; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
+    .quick-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; }
+    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .quick-item { background: var(--card-bg); border-radius: 10px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+    .quick-jpy { font-size: 13px; font-weight: 700; color: var(--green-800); }
+    .quick-twd { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  </style>
+</head>
+<body>
+
+  <!-- 行程 -->
+  <section id="page-schedule" class="page active">
+    <div class="page-header">
+      <div class="label">2026 夏・北海道</div>
+      <h1>6天5夜旅遊手冊</h1>
+      <div class="subtitle">8/23（日）→ 8/28（五）</div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <div class="stat-badge">
+          <div class="stat-num">6</div>
+          <div class="stat-label">天數</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-num">5</div>
+          <div class="stat-label">城市</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-num">4</div>
+          <div class="stat-label">飯店</div>
+        </div>
+      </div>
+    </div>
+    <div class="content-area">
+
+      <!-- Day 0 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag" style="background:var(--green-300);color:var(--green-900);">DAY 0</span>
+          <span class="day-title">8/22（六）斗六 → 桃園</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🚗</span>
+            <div>
+              <div class="spot-name">斗六出發</div>
+              <div class="spot-note">提前一天抵達桃園，避免趕早班機</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">✈️</span>
+            <div>
+              <div class="spot-name">明日班機：JX850 10:05 起飛</div>
+              <div class="spot-note">建議 08:00 前抵達桃園機場</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 諾富特桃園機場酒店</div>
+        </div>
+      </div>
+
+      <!-- Day 1 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 1</span>
+          <span class="day-title">8/23（日）新千歲 → 札幌</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">✈️</span>
+            <div>
+              <div class="spot-name">JX850 抵達新千歲機場</div>
+              <div class="spot-note">桃園 10:05 起飛・約 13:00 抵達（含時差）</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🚃</span>
+            <div>
+              <div class="spot-name">快速鐵道至札幌</div>
+              <div class="spot-note">新千歲空港站 → 札幌站，約 37 分・¥1,150</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🏙️</span>
+            <div>
+              <div class="spot-name">狸小路商店街</div>
+              <div class="spot-note">北海道伴手禮・藥妝採購</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🍜</span>
+            <div>
+              <div class="spot-name">晚餐：札幌味噌拉麵</div>
+              <div class="spot-note">推薦：一幻拉麵（湯咖哩亦可）</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 Dormy Inn Premium 札幌</div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 2</span>
+          <span class="day-title">8/24（一）札幌 → 富良野 → 札幌</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🚃</span>
+            <div>
+              <div class="spot-name">前往富良野</div>
+              <div class="spot-note">札幌站搭 JR 富良野線，約 2.5 小時</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌸</span>
+            <div>
+              <div class="spot-name">富田農場（ファーム富田）</div>
+              <div class="spot-note">8月下旬：薰衣草尾聲 + 向日葵、千日紅盛開</div>
+              <div class="tip">💡 薰衣草霜淇淋必吃</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌻</span>
+            <div>
+              <div class="spot-name">日之出公園</div>
+              <div class="spot-note">俯瞰富良野盆地・免費入場</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🍷</span>
+            <div>
+              <div class="spot-name">富良野葡萄酒廠</div>
+              <div class="spot-note">葡萄酒試飲・起司工廠參觀</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 Dormy Inn Premium 札幌（連住）</div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 3</span>
+          <span class="day-title">8/25（二）登別 → 洞爺湖</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">♨️</span>
+            <div>
+              <div class="spot-name">登別地獄谷</div>
+              <div class="spot-note">日本最大溫泉地獄景觀・硫磺噴泉、大正地獄池</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">👹</span>
+            <div>
+              <div class="spot-name">登別鬼之館（のぼりべつ文化交流館）</div>
+              <div class="spot-note">了解溫泉鄉歷史・周邊足湯免費</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🚌</span>
+            <div>
+              <div class="spot-name">前往洞爺湖</div>
+              <div class="spot-note">道南巴士，約 45 分</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🎆</span>
+            <div>
+              <div class="spot-name">洞爺湖湖畔煙火</div>
+              <div class="spot-note">每晚 20:45 施放（4月〜10月期間）約 20 分鐘</div>
+              <div class="tip">💡 景乃之風房間可直接觀賞</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 洞爺湖景乃之風度假酒店</div>
+        </div>
+      </div>
+
+      <!-- Day 4 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag" style="background:var(--green-400);">DAY 4</span>
+          <span class="day-title">8/26（三）洞爺湖 → 函館</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🚌</span>
+            <div>
+              <div class="spot-name">前往函館</div>
+              <div class="spot-note">高速巴士或 JR 特急北斗，約 2–2.5 小時</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🏯</span>
+            <div>
+              <div class="spot-name">五稜郭公園</div>
+              <div class="spot-note">日本唯一五角形城廓・五稜郭塔展望台¥1,000</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌉</span>
+            <div>
+              <div class="spot-name">函館山夜景</div>
+              <div class="spot-note">世界三大夜景之一・建議 19:30 後搭纜車</div>
+              <div class="tip">💡 纜車來回 ¥1,500 · 頂部風大記得帶外套</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 La Vista Hakodate Bay</div>
+        </div>
+      </div>
+
+      <!-- Day 5 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag" style="background:var(--green-400);">DAY 5</span>
+          <span class="day-title">8/27（四）函館 + 大沼</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🐟</span>
+            <div>
+              <div class="spot-name">函館朝市</div>
+              <div class="spot-note">早上 05:00 開市・海鮮丼推薦「きくよ食堂」</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🏘️</span>
+            <div>
+              <div class="spot-name">元町洋館群 + 基督教會</div>
+              <div class="spot-note">明治時代西洋建築散策・斜坡路值得拍照</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌊</span>
+            <div>
+              <div class="spot-name">大沼國定公園</div>
+              <div class="spot-note">駒ヶ岳火山湖景・湖上遊覽船 ¥1,100</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 La Vista Hakodate Bay（連住）</div>
+        </div>
+      </div>
+
+      <!-- Day 6 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag" style="background:var(--green-300);color:var(--green-900);">DAY 6</span>
+          <span class="day-title">8/28（五）朝市 → 返台</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🍱</span>
+            <div>
+              <div class="spot-name">函館朝市早餐</div>
+              <div class="spot-note">最後一頓・海膽丼 or 毛蟹</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">✈️</span>
+            <div>
+              <div class="spot-name">JX861 函館機場 17:45 起飛</div>
+              <div class="spot-note">建議 15:00 前抵達機場（函館市區車程約 20 分）</div>
+              <div class="tip">💡 機場小型但有海鮮伴手禮，預留 30 分購物</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 住宿 -->
+  <section id="page-hotel" class="page">
+    <div class="page-header">
+      <div class="label">🏨 住宿資訊</div>
+      <h1>4間住宿・5晚</h1>
+    </div>
+    <div class="content-area">
+
+      <!-- 諾富特桃園機場 -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/22（六）</span>
+          <span class="hotel-nights">前晚入住</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">諾富特桃園機場</div>
+          <div class="hotel-meta">✈️ 機場步行 5 分 · Check-in 15:00 · Check-out 12:00</div>
+          <div class="hotel-feature">🛎️ 直接連通第二航廈・免費接駁車</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=Novotel+Taipei+Taoyuan+International+Airport" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+886-3-3982888">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dormy Inn 札幌 -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/23–8/24（日–一）</span>
+          <span class="hotel-nights">連住 2 晚</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">Dormy Inn Premium 札幌</div>
+          <div class="hotel-meta">🏙️ 札幌市中心・地下鐵大通站步行 5 分 · Check-in 15:00</div>
+          <div class="hotel-feature">♨️ 天然温泉・夜鳴きそば（22:00 免費供應）・洗衣機</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=Dormy+Inn+Premium+Sapporo" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+81-11-232-0011">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 景乃之風（featured） -->
+      <div class="hotel-card featured">
+        <div class="hotel-date-bar featured">
+          <span class="hotel-date">8/25（二）</span>
+          <span class="hotel-nights">⭐ 度假酒店</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">洞爺湖景乃之風度假酒店</div>
+          <div class="hotel-meta">🌊 湖景客房・Check-in 15:00 · Check-out 11:00</div>
+          <div class="hotel-feature">🎆 客房可見湖畔煙火（20:45）・露天溫泉浴池・和式晚餐</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" style="background:var(--green-100);" href="https://maps.google.com/?q=洞爺湖景乃之風" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" style="background:var(--green-100);" href="tel:+81-142-73-1111">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- La Vista -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/26–8/27（三–四）</span>
+          <span class="hotel-nights">連住 2 晚</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">La Vista Hakodate Bay</div>
+          <div class="hotel-meta">⛵ 函館灣景觀・函館站步行 10 分 · Check-in 15:00</div>
+          <div class="hotel-feature">🦀 早餐可選螃蟹料理・展望露天風呂・夜景房</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=La+Vista+Hakodate+Bay" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+81-138-23-6111">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 行李 -->
+  <section id="page-baggage" class="page">
+    <div class="page-header">
+      <div class="label">🎒 行李清單</div>
+      <h1>出發前確認</h1>
+      <div class="progress-bar-wrap">
+        <div class="progress-info">
+          <span>已打包</span>
+          <strong id="bag-count">0 / 0 項</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bag-progress" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="content-area">
+
+      <div class="bag-section-label">📋 證件 &amp; 票券</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="passport"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">護照（有效期 6 個月以上）</div></div></div>
+        <div class="bag-item" data-key="ticket"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">機票電子票（JX850 / JX861）</div></div></div>
+        <div class="bag-item" data-key="insurance"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">旅遊平安保險證明</div></div></div>
+        <div class="bag-item" data-key="creditcard"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">信用卡（Visa / Master）</div></div></div>
+        <div class="bag-item" data-key="yen"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">日幣現金</div><div class="bag-tip">💡 北海道鄉下多不收信用卡</div></div></div>
+      </div>
+
+      <div class="bag-section-label">🔌 電子 &amp; 通訊</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="sim"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">日本 SIM 卡 / eSIM（預先設定好）</div></div></div>
+        <div class="bag-item" data-key="power-bank"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">行動電源（20000mAh）</div></div></div>
+        <div class="bag-item" data-key="camera"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">相機 + 記憶卡 + 充電器</div></div></div>
+        <div class="bag-item" data-key="adapter"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">旅行萬用轉接頭</div><div class="bag-tip">💡 日本插頭為兩孔扁平，台灣規格相容</div></div></div>
+        <div class="bag-item" data-key="earphones"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">耳機</div></div></div>
+      </div>
+
+      <div class="bag-section-label">👕 衣物</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="jacket"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">輕薄外套</div><div class="bag-tip">💡 北海道早晚約 18°C，白天 25°C</div></div></div>
+        <div class="bag-item" data-key="uv-top"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">防曬衣 / 薄長袖 × 2</div></div></div>
+        <div class="bag-item" data-key="tshirt"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">換洗 T-shirt × 5</div></div></div>
+        <div class="bag-item" data-key="pants"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">長褲 × 1、短褲 × 2</div></div></div>
+        <div class="bag-item" data-key="socks"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">襪子 × 6 雙</div></div></div>
+        <div class="bag-item" data-key="shoes"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">舒適步行鞋</div><div class="bag-tip">💡 函館坡道多，避免新鞋</div></div></div>
+      </div>
+
+      <div class="bag-section-label">🧴 盥洗 &amp; 醫療</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="medicine"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">常備藥（感冒、腸胃、止痛、暈車）</div></div></div>
+        <div class="bag-item" data-key="sunscreen"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">防曬乳 SPF 50+</div></div></div>
+        <div class="bag-item" data-key="personal-care"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">個人盥洗用品</div><div class="bag-tip">💡 Dormy Inn 提供洗髮精・沐浴乳</div></div></div>
+        <div class="bag-item" data-key="mask"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">口罩 × 10</div></div></div>
+      </div>
+
+      <div class="bag-section-label">💴 其他</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="coin-purse"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">零錢包</div><div class="bag-tip">💡 日本自動販賣機、神社香油錢多用零錢</div></div></div>
+        <div class="bag-item" data-key="eco-bag"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">環保購物袋 × 2</div></div></div>
+        <div class="bag-item" data-key="snacks"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">台灣零食（分送）</div></div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 天氣 -->
+  <section id="page-weather" class="page">
+    <div class="page-header">
+      <div class="label">🌤️ 天氣參考</div>
+      <h1>8月下旬氣候</h1>
+    </div>
+    <div class="content-area">
+
+      <!-- 札幌 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">🏙️ 札幌</span>
+          <span class="weather-dates">8/23–8/24</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 27°C <span>/ 夜間 18°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">40%</div></div>
+            <div class="weather-item"><div class="weather-item-label">濕度</div><div class="weather-item-value">約 70%</div></div>
+            <div class="weather-item"><div class="weather-item-label">日出 / 日落</div><div class="weather-item-value">04:47 / 18:42</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">T-shirt + 薄外套</div></div>
+          </div>
+          <div class="weather-tip">💡 早晚溫差大，外出攜帶薄外套。偶有陣雨，建議帶折疊傘。</div>
+        </div>
+      </div>
+
+      <!-- 富良野 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">🌸 富良野</span>
+          <span class="weather-dates">8/24（一日往返）</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 26°C <span>/ 夜間 16°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">35%</div></div>
+            <div class="weather-item"><div class="weather-item-label">UV 指數</div><div class="weather-item-value">高（7–9）</div></div>
+            <div class="weather-item"><div class="weather-item-label">花況</div><div class="weather-item-value">向日葵盛開</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">防曬衣 + 帽子</div></div>
+          </div>
+          <div class="weather-tip">💡 花田多為開放空間，日照強烈。薰衣草約 8 月中下旬尾聲，向日葵與千日紅正盛。</div>
+        </div>
+      </div>
+
+      <!-- 登別・洞爺湖 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">♨️ 登別・洞爺湖</span>
+          <span class="weather-dates">8/25</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 25°C <span>/ 夜間 17°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">30%</div></div>
+            <div class="weather-item"><div class="weather-item-label">湖畔風速</div><div class="weather-item-value">微風（3–5 m/s）</div></div>
+            <div class="weather-item"><div class="weather-item-label">煙火時間</div><div class="weather-item-value">每晚 20:45</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">薄長袖 + 外套</div></div>
+          </div>
+          <div class="weather-tip">💡 煙火觀賞時湖畔風大、氣溫較低，建議攜帶外套。景乃之風客房可室內觀賞。</div>
+        </div>
+      </div>
+
+      <!-- 函館 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">⛵ 函館</span>
+          <span class="weather-dates">8/26–8/28</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 26°C <span>/ 夜間 19°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">35%</div></div>
+            <div class="weather-item"><div class="weather-item-label">山頂氣溫</div><div class="weather-item-value">約 18°C</div></div>
+            <div class="weather-item"><div class="weather-item-label">最佳夜景</div><div class="weather-item-value">日落後 40 分</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">T-shirt + 外套</div></div>
+          </div>
+          <div class="weather-tip">💡 函館山山頂風大且涼，夜景觀賞需外套。元町坡道濕滑時須注意。</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 換算 -->
+  <section id="page-currency" class="page">
+    <div class="page-header">
+      <div class="label">Currency</div>
+      <h1>台幣 ⇄ 日圓</h1>
+      <div class="subtitle">出發前更新匯率，換算更準確</div>
+      <div class="rate-row">
+        <span class="rate-label">1 TWD ≈</span>
+        <input class="rate-input" id="rate-input" type="number" inputmode="decimal" step="0.01" min="0.01">
+        <span class="rate-unit">JPY</span>
+        <span class="rate-hint">✏️ 可修改</span>
+      </div>
+    </div>
+    <div class="content-area">
+
+      <!-- TWD → JPY -->
+      <div class="conv-card">
+        <div class="conv-label">台幣 → 日圓</div>
+        <div class="conv-input-row">
+          <span class="conv-currency">NT$</span>
+          <input class="conv-input" id="input-twd" type="number" inputmode="decimal" placeholder="0" min="0">
+        </div>
+        <div class="conv-arrow">↓</div>
+        <div class="conv-result" id="result-jpy">— <span class="conv-result-unit">JPY</span></div>
+      </div>
+
+      <!-- JPY → TWD -->
+      <div class="conv-card">
+        <div class="conv-label">日圓 → 台幣</div>
+        <div class="conv-input-row">
+          <span class="conv-currency">¥</span>
+          <input class="conv-input" id="input-jpy" type="number" inputmode="decimal" placeholder="0" min="0">
+        </div>
+        <div class="conv-arrow">↓</div>
+        <div class="conv-result" id="result-twd">— <span class="conv-result-unit">TWD</span></div>
+      </div>
+
+      <!-- 常用金額 -->
+      <div class="quick-title">常用金額參考</div>
+      <div class="quick-grid" id="quick-grid"></div>
+
+    </div>
+  </section>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-target="page-schedule">
+      <span class="icon">📅</span><span class="tab-label">行程</span>
+    </button>
+    <button class="tab-btn" data-target="page-hotel">
+      <span class="icon">🏨</span><span class="tab-label">住宿</span>
+    </button>
+    <button class="tab-btn" data-target="page-baggage">
+      <span class="icon">🎒</span><span class="tab-label">行李</span>
+    </button>
+    <button class="tab-btn" data-target="page-weather">
+      <span class="icon">🌤️</span><span class="tab-label">天氣</span>
+    </button>
+    <button class="tab-btn" data-target="page-currency">
+      <span class="icon">💴</span><span class="tab-label">換算</span>
+    </button>
+  </nav>
+
+  <script>
+    // Tab 切換
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.target);
+        if (target) {
+          target.classList.add('active');
+          target.querySelector('.content-area')?.scrollTo(0, 0);
+        }
+      });
+    });
+
+    // 行李清單 localStorage
+    (function() {
+      const STORE_KEY = 'hokkaido2026_baggage';
+      const items = document.querySelectorAll('.bag-item');
+      const countEl = document.getElementById('bag-count');
+      const progressEl = document.getElementById('bag-progress');
+      const total = items.length;
+
+      function save() {
+        const checked = [...items].filter(i => i.classList.contains('checked')).map(i => i.dataset.key);
+        localStorage.setItem(STORE_KEY, JSON.stringify(checked));
+      }
+
+      function updateProgress() {
+        const done = [...items].filter(i => i.classList.contains('checked')).length;
+        countEl.textContent = done + ' / ' + total + ' 項';
+        progressEl.style.width = (done / total * 100) + '%';
+      }
+
+      function load() {
+        const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+        items.forEach(item => {
+          if (saved.includes(item.dataset.key)) item.classList.add('checked');
+        });
+        updateProgress();
+      }
+
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('checked');
+          save();
+          updateProgress();
+        });
+      });
+
+      load();
+    })();
+
+    // 台幣 ⇄ 日圓換算
+    (function() {
+      const RATE_KEY = 'hokkaido2026_jpyrate';
+      const DEFAULT_RATE = 4.59; // 1 TWD = 4.59 JPY（出發前請更新）
+
+      let rate = parseFloat(localStorage.getItem(RATE_KEY)) || DEFAULT_RATE;
+
+      const rateInput = document.getElementById('rate-input');
+      const inputTwd = document.getElementById('input-twd');
+      const inputJpy = document.getElementById('input-jpy');
+      const resultJpy = document.getElementById('result-jpy');
+      const resultTwd = document.getElementById('result-twd');
+      const quickGrid = document.getElementById('quick-grid');
+
+      const QUICK_AMOUNTS = [500, 1000, 3000, 5000, 10000, 20000, 50000, 100000];
+
+      function fmt(n) {
+        return Math.round(n).toLocaleString();
+      }
+
+      function recalcAll() {
+        const twd = parseFloat(inputTwd.value);
+        const jpy = parseFloat(inputJpy.value);
+        resultJpy.innerHTML = (!isNaN(twd) && inputTwd.value !== '')
+          ? '¥' + fmt(twd * rate) + ' <span class="conv-result-unit">JPY</span>'
+          : '— <span class="conv-result-unit">JPY</span>';
+        resultTwd.innerHTML = (!isNaN(jpy) && inputJpy.value !== '')
+          ? 'NT$' + fmt(jpy / rate) + ' <span class="conv-result-unit">TWD</span>'
+          : '— <span class="conv-result-unit">TWD</span>';
+        quickGrid.innerHTML = '';
+        QUICK_AMOUNTS.forEach(jpy => {
+          const el = document.createElement('div');
+          el.className = 'quick-item';
+          el.innerHTML = '<div class="quick-jpy">¥' + fmt(jpy) + '</div><div class="quick-twd">≈ NT$' + fmt(jpy / rate) + '</div>';
+          quickGrid.appendChild(el);
+        });
+      }
+
+      rateInput.value = rate.toFixed(2);
+      rateInput.addEventListener('change', () => {
+        const v = parseFloat(rateInput.value);
+        if (!isNaN(v) && v > 0) {
+          rate = v;
+          localStorage.setItem(RATE_KEY, rate);
+          recalcAll();
+        } else {
+          rateInput.value = rate.toFixed(2);
+        }
+      });
+
+      inputTwd.addEventListener('input', () => {
+        const v = parseFloat(inputTwd.value);
+        resultJpy.innerHTML = (!isNaN(v) && inputTwd.value !== '')
+          ? '¥' + fmt(v * rate) + ' <span class="conv-result-unit">JPY</span>'
+          : '— <span class="conv-result-unit">JPY</span>';
+      });
+
+      inputJpy.addEventListener('input', () => {
+        const v = parseFloat(inputJpy.value);
+        resultTwd.innerHTML = (!isNaN(v) && inputJpy.value !== '')
+          ? 'NT$' + fmt(v / rate) + ' <span class="conv-result-unit">TWD</span>'
+          : '— <span class="conv-result-unit">TWD</span>';
+      });
+
+      recalcAll();
+    })();
+  </script>
+
+</body>
+</html>
