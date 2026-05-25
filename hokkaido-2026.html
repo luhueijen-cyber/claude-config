@@ -129,6 +129,17 @@
       margin-bottom: 6px;
     }
     .content-area { flex: 1; padding: 12px; background: var(--page-bg); overflow-y: auto; }
+
+    /* ── 統計徽章 ── */
+    .stat-badge {
+      background: rgba(255,255,255,0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      text-align: center;
+      min-width: 52px;
+    }
+    .stat-num { color: #fff; font-size: 18px; font-weight: 700; }
+    .stat-label { color: rgba(255,255,255,0.75); font-size: 9px; margin-top: 1px; }
   </style>
 </head>
 <body>
@@ -137,8 +148,22 @@
   <section id="page-schedule" class="page active">
     <div class="page-header">
       <div class="label">2026 夏・北海道</div>
-      <h1>行程規劃</h1>
-      <div class="subtitle">佔位文字</div>
+      <h1>6天5夜旅遊手冊</h1>
+      <div class="subtitle">8/23（日）→ 8/28（五）</div>
+      <div style="display:flex;gap:10px;margin-top:12px;">
+        <div class="stat-badge">
+          <div class="stat-num">6</div>
+          <div class="stat-label">天數</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-num">5</div>
+          <div class="stat-label">城市</div>
+        </div>
+        <div class="stat-badge">
+          <div class="stat-num">4</div>
+          <div class="stat-label">飯店</div>
+        </div>
+      </div>
     </div>
     <div class="content-area"><p style="color:#aaa;">行程內容（Task 3–4）</p></div>
   </section>
