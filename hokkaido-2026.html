@@ -174,6 +174,46 @@
       font-weight: 600;
     }
     .tip { font-size: 10px; color: var(--green-500); margin-top: 3px; }
+    .hotel-card { border-radius: 12px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .hotel-card.featured { border: 1.5px solid var(--green-300); box-shadow: 0 2px 10px rgba(76,175,80,0.2); }
+    .hotel-date-bar {
+      background: var(--green-100);
+      padding: 7px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .hotel-date-bar.featured { background: linear-gradient(90deg, var(--green-500), var(--green-400)); }
+    .hotel-date { font-size: 11px; font-weight: 700; color: var(--green-900); }
+    .hotel-date-bar.featured .hotel-date { color: #fff; }
+    .hotel-nights {
+      font-size: 9px;
+      border: 1px solid var(--green-200);
+      color: var(--green-700);
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+    .hotel-date-bar.featured .hotel-nights { border-color: rgba(255,255,255,0.6); color: #fff; }
+    .hotel-body { background: #fff; padding: 12px; }
+    .hotel-name { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .hotel-meta { font-size: 10px; color: var(--text-muted); margin-top: 3px; }
+    .hotel-feature { font-size: 11px; color: #555; margin-top: 6px; line-height: 1.6; }
+    .hotel-btns { display: flex; gap: 8px; margin-top: 10px; }
+    .hotel-btn {
+      flex: 1;
+      background: var(--green-50);
+      border: none;
+      border-radius: 7px;
+      padding: 7px;
+      font-size: 11px;
+      color: var(--green-800);
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: block;
+    }
+    .hotel-btn:active { background: var(--green-100); }
+
   </style>
 </head>
 <body>
@@ -444,7 +484,77 @@
       <div class="label">🏨 住宿資訊</div>
       <h1>4間住宿・5晚</h1>
     </div>
-    <div class="content-area"><p style="color:#aaa;">住宿內容（Task 5）</p></div>
+    <div class="content-area">
+
+      <!-- 諾富特桃園機場 -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/22（六）</span>
+          <span class="hotel-nights">前晚入住</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">諾富特桃園機場</div>
+          <div class="hotel-meta">✈️ 機場步行 5 分 · Check-in 15:00 · Check-out 12:00</div>
+          <div class="hotel-feature">🛎️ 直接連通第二航廈・免費接駁車</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=Novotel+Taipei+Taoyuan+International+Airport" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+886-3-3982888">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dormy Inn 札幌 -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/23–8/24（日–一）</span>
+          <span class="hotel-nights">連住 2 晚</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">Dormy Inn Premium 札幌</div>
+          <div class="hotel-meta">🏙️ 札幌市中心・地下鐵大通站步行 5 分 · Check-in 15:00</div>
+          <div class="hotel-feature">♨️ 天然温泉・夜鳴きそば（22:00 免費供應）・洗衣機</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=Dormy+Inn+Premium+Sapporo" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+81-11-232-0011">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 景乃之風（featured） -->
+      <div class="hotel-card featured">
+        <div class="hotel-date-bar featured">
+          <span class="hotel-date">8/25（二）</span>
+          <span class="hotel-nights">⭐ 度假酒店</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">洞爺湖景乃之風度假酒店</div>
+          <div class="hotel-meta">🌊 湖景客房・Check-in 15:00 · Check-out 11:00</div>
+          <div class="hotel-feature">🎆 客房可見湖畔煙火（20:45）・露天溫泉浴池・和式晚餐</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" style="background:var(--green-100);" href="https://maps.google.com/?q=洞爺湖景乃之風" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" style="background:var(--green-100);" href="tel:+81-142-73-1111">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- La Vista -->
+      <div class="hotel-card">
+        <div class="hotel-date-bar">
+          <span class="hotel-date">8/26–8/27（三–四）</span>
+          <span class="hotel-nights">連住 2 晚</span>
+        </div>
+        <div class="hotel-body">
+          <div class="hotel-name">La Vista Hakodate Bay</div>
+          <div class="hotel-meta">⛵ 函館灣景觀・函館站步行 10 分 · Check-in 15:00</div>
+          <div class="hotel-feature">🦀 早餐可選螃蟹料理・展望露天風呂・夜景房</div>
+          <div class="hotel-btns">
+            <a class="hotel-btn" href="https://maps.google.com/?q=La+Vista+Hakodate+Bay" target="_blank">📍 地圖</a>
+            <a class="hotel-btn" href="tel:+81-138-23-6111">📞 電話</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <!-- 行李 -->
