@@ -251,7 +251,7 @@
     .bag-text { font-size: 12px; color: #333; }
     .bag-tip { font-size: 10px; color: var(--green-500); margin-top: 2px; }
 
-    .weather-card { background: #fff; border-radius: 12px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .weather-card { background: var(--card-bg); border-radius: 12px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
     .weather-city-bar { background: var(--green-100); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
     .weather-city { font-size: 14px; font-weight: 700; color: var(--text-primary); }
     .weather-dates { font-size: 10px; color: var(--text-muted); }
@@ -777,7 +777,10 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
         const target = document.getElementById(btn.dataset.target);
-        if (target) target.classList.add('active');
+        if (target) {
+          target.classList.add('active');
+          target.querySelector('.content-area')?.scrollTo(0, 0);
+        }
       });
     });
 
