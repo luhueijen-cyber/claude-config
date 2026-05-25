@@ -251,6 +251,19 @@
     .bag-text { font-size: 12px; color: #333; }
     .bag-tip { font-size: 10px; color: var(--green-500); margin-top: 2px; }
 
+    .weather-card { background: #fff; border-radius: 12px; margin-bottom: 12px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    .weather-city-bar { background: var(--green-100); padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; }
+    .weather-city { font-size: 14px; font-weight: 700; color: var(--text-primary); }
+    .weather-dates { font-size: 10px; color: var(--text-muted); }
+    .weather-body { padding: 12px 14px; }
+    .weather-temp { font-size: 22px; font-weight: 700; color: var(--green-800); }
+    .weather-temp span { font-size: 12px; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
+    .weather-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+    .weather-item { background: var(--green-50); border-radius: 7px; padding: 7px 10px; }
+    .weather-item-label { font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .weather-item-value { font-size: 12px; color: #333; margin-top: 2px; font-weight: 500; }
+    .weather-tip { margin-top: 10px; font-size: 11px; color: #555; background: var(--green-50); border-radius: 7px; padding: 8px 10px; border-left: 3px solid var(--green-300); }
+
   </style>
 </head>
 <body>
@@ -663,7 +676,81 @@
       <div class="label">🌤️ 天氣參考</div>
       <h1>8月下旬氣候</h1>
     </div>
-    <div class="content-area"><p style="color:#aaa;">天氣內容（Task 7）</p></div>
+    <div class="content-area">
+
+      <!-- 札幌 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">🏙️ 札幌</span>
+          <span class="weather-dates">8/23–8/24</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 27°C <span>/ 夜間 18°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">40%</div></div>
+            <div class="weather-item"><div class="weather-item-label">濕度</div><div class="weather-item-value">約 70%</div></div>
+            <div class="weather-item"><div class="weather-item-label">日出 / 日落</div><div class="weather-item-value">04:47 / 18:42</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">T-shirt + 薄外套</div></div>
+          </div>
+          <div class="weather-tip">💡 早晚溫差大，外出攜帶薄外套。偶有陣雨，建議帶折疊傘。</div>
+        </div>
+      </div>
+
+      <!-- 富良野 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">🌸 富良野</span>
+          <span class="weather-dates">8/24（一日往返）</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 26°C <span>/ 夜間 16°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">35%</div></div>
+            <div class="weather-item"><div class="weather-item-label">UV 指數</div><div class="weather-item-value">高（7–9）</div></div>
+            <div class="weather-item"><div class="weather-item-label">花況</div><div class="weather-item-value">向日葵盛開</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">防曬衣 + 帽子</div></div>
+          </div>
+          <div class="weather-tip">💡 花田多為開放空間，日照強烈。薰衣草約 8 月中下旬尾聲，向日葵與千日紅正盛。</div>
+        </div>
+      </div>
+
+      <!-- 登別・洞爺湖 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">♨️ 登別・洞爺湖</span>
+          <span class="weather-dates">8/25</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 25°C <span>/ 夜間 17°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">30%</div></div>
+            <div class="weather-item"><div class="weather-item-label">湖畔風速</div><div class="weather-item-value">微風（3–5 m/s）</div></div>
+            <div class="weather-item"><div class="weather-item-label">煙火時間</div><div class="weather-item-value">每晚 20:45</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">薄長袖 + 外套</div></div>
+          </div>
+          <div class="weather-tip">💡 煙火觀賞時湖畔風大、氣溫較低，建議攜帶外套。景乃之風客房可室內觀賞。</div>
+        </div>
+      </div>
+
+      <!-- 函館 -->
+      <div class="weather-card">
+        <div class="weather-city-bar">
+          <span class="weather-city">⛵ 函館</span>
+          <span class="weather-dates">8/26–8/28</span>
+        </div>
+        <div class="weather-body">
+          <div class="weather-temp">日間 26°C <span>/ 夜間 19°C</span></div>
+          <div class="weather-grid">
+            <div class="weather-item"><div class="weather-item-label">降雨機率</div><div class="weather-item-value">35%</div></div>
+            <div class="weather-item"><div class="weather-item-label">山頂氣溫</div><div class="weather-item-value">約 18°C</div></div>
+            <div class="weather-item"><div class="weather-item-label">最佳夜景</div><div class="weather-item-value">日落後 40 分</div></div>
+            <div class="weather-item"><div class="weather-item-label">建議穿搭</div><div class="weather-item-value">T-shirt + 外套</div></div>
+          </div>
+          <div class="weather-tip">💡 函館山山頂風大且涼，夜景觀賞需外套。元町坡道濕滑時須注意。</div>
+        </div>
+      </div>
+
+    </div>
   </section>
 
   <!-- Tab Bar -->
