@@ -140,6 +140,40 @@
     }
     .stat-num { color: #fff; font-size: 18px; font-weight: 700; }
     .stat-label { color: rgba(255,255,255,0.75); font-size: 9px; margin-top: 1px; }
+
+    /* ── Day 卡片 ── */
+    .day-tag {
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--green-500);
+      flex-shrink: 0;
+    }
+    .day-title { font-size: 12px; font-weight: 600; color: var(--text-primary); }
+    .day-card-body { padding: 10px 12px; }
+    .spot-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .spot-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .spot-name { font-size: 12px; font-weight: 600; color: #333; }
+    .spot-note { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+    .stay-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding-top: 8px;
+      margin-top: 8px;
+      border-top: 1px solid #f0f0f0;
+      font-size: 11px;
+      color: var(--text-secondary);
+      font-weight: 600;
+    }
+    .tip { font-size: 10px; color: var(--green-500); margin-top: 3px; }
   </style>
 </head>
 <body>
@@ -165,7 +199,156 @@
         </div>
       </div>
     </div>
-    <div class="content-area"><p style="color:#aaa;">行程內容（Task 3–4）</p></div>
+    <div class="content-area">
+
+      <!-- Day 0 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag" style="background:var(--green-300);color:var(--green-900);">DAY 0</span>
+          <span class="day-title">8/22（六）斗六 → 桃園</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🚗</span>
+            <div>
+              <div class="spot-name">斗六出發</div>
+              <div class="spot-note">提前一天抵達桃園，避免趕早班機</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">✈️</span>
+            <div>
+              <div class="spot-name">明日班機：JX850 10:05 起飛</div>
+              <div class="spot-note">建議 08:00 前抵達桃園機場</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 諾富特桃園機場酒店</div>
+        </div>
+      </div>
+
+      <!-- Day 1 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 1</span>
+          <span class="day-title">8/23（日）新千歲 → 札幌</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">✈️</span>
+            <div>
+              <div class="spot-name">JX850 抵達新千歲機場</div>
+              <div class="spot-note">桃園 10:05 起飛・約 13:00 抵達（含時差）</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🚃</span>
+            <div>
+              <div class="spot-name">快速鐵道至札幌</div>
+              <div class="spot-note">新千歲空港站 → 札幌站，約 37 分・¥1,150</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🏙️</span>
+            <div>
+              <div class="spot-name">狸小路商店街</div>
+              <div class="spot-note">北海道伴手禮・藥妝採購</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🍜</span>
+            <div>
+              <div class="spot-name">晚餐：札幌味噌拉麵</div>
+              <div class="spot-note">推薦：一幻拉麵（湯咖哩亦可）</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 Dormy Inn Premium 札幌</div>
+        </div>
+      </div>
+
+      <!-- Day 2 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 2</span>
+          <span class="day-title">8/24（一）札幌 → 富良野 → 札幌</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">🚃</span>
+            <div>
+              <div class="spot-name">前往富良野</div>
+              <div class="spot-note">札幌站搭 JR 富良野線，約 2.5 小時</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌸</span>
+            <div>
+              <div class="spot-name">富田農場（ファーム富田）</div>
+              <div class="spot-note">8月下旬：薰衣草尾聲 + 向日葵、千日紅盛開</div>
+              <div class="tip">💡 薰衣草霜淇淋必吃</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🌻</span>
+            <div>
+              <div class="spot-name">日之出公園</div>
+              <div class="spot-note">俯瞰富良野盆地・免費入場</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🍷</span>
+            <div>
+              <div class="spot-name">富良野葡萄酒廠</div>
+              <div class="spot-note">葡萄酒試飲・起司工廠參觀</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 Dormy Inn Premium 札幌（連住）</div>
+        </div>
+      </div>
+
+      <!-- Day 3 -->
+      <div class="card">
+        <div class="card-header">
+          <span class="day-tag">DAY 3</span>
+          <span class="day-title">8/25（二）登別 → 洞爺湖</span>
+        </div>
+        <div class="day-card-body">
+          <div class="spot-row">
+            <span class="spot-icon">♨️</span>
+            <div>
+              <div class="spot-name">登別地獄谷</div>
+              <div class="spot-note">日本最大溫泉地獄景觀・硫磺噴泉、大正地獄池</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">👹</span>
+            <div>
+              <div class="spot-name">登別鬼之館（のぼりべつ文化交流館）</div>
+              <div class="spot-note">了解溫泉鄉歷史・周邊足湯免費</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🚌</span>
+            <div>
+              <div class="spot-name">前往洞爺湖</div>
+              <div class="spot-note">道南巴士，約 45 分</div>
+            </div>
+          </div>
+          <div class="spot-row">
+            <span class="spot-icon">🎆</span>
+            <div>
+              <div class="spot-name">洞爺湖湖畔煙火</div>
+              <div class="spot-note">每晚 20:45 施放（4月〜10月期間）約 20 分鐘</div>
+              <div class="tip">💡 景乃之風房間可直接觀賞</div>
+            </div>
+          </div>
+          <div class="stay-row">🏨 洞爺湖景乃之風度假酒店</div>
+        </div>
+      </div>
+
+      <!-- Day 4–6 佔位，Task 4 填入 -->
+      <div id="days-4-6-placeholder"></div>
+
+    </div>
   </section>
 
   <!-- 住宿 -->
