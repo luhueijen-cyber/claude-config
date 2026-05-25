@@ -2,7 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>2026 北海道旅遊手冊</title>
   <style>
@@ -93,7 +93,7 @@
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 100%;
+      width: 100vw;
       max-width: 480px;
       height: var(--tab-height);
       background: #fff;
@@ -193,7 +193,8 @@
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById(btn.dataset.target).classList.add('active');
+        const target = document.getElementById(btn.dataset.target);
+        if (target) target.classList.add('active');
       });
     });
   </script>
