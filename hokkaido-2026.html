@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>2026 北海道旅遊手冊</title>
+  <style>
+    :root {
+      --green-900: #1b5e20;
+      --green-800: #2e7d32;
+      --green-700: #388e3c;
+      --green-500: #4caf50;
+      --green-400: #66bb6a;
+      --green-300: #81c784;
+      --green-200: #a5d6a7;
+      --green-100: #e8f5e9;
+      --green-50:  #f1f8e9;
+      --text-primary: #1b5e20;
+      --text-secondary: #388e3c;
+      --text-muted: #888;
+      --card-bg: #ffffff;
+      --page-bg: #f1f8e9;
+      --tab-height: 60px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--page-bg);
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── 頁面區塊 ── */
+    .page {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+      overflow-y: auto;
+      padding-bottom: var(--tab-height);
+    }
+    .page.active { display: flex; }
+
+    /* ── Header ── */
+    .page-header {
+      background: linear-gradient(135deg, var(--green-800), var(--green-700));
+      padding: 16px 16px 20px;
+      color: #fff;
+      flex-shrink: 0;
+    }
+    .page-header .label {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      opacity: 0.75;
+    }
+    .page-header h1 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .page-header .subtitle {
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 4px;
+    }
+
+    /* ── 卡片 ── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .card-header {
+      background: var(--green-100);
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card-body { padding: 10px 12px; }
+
+    /* ── Bottom Tab Bar ── */
+    .tab-bar {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      height: var(--tab-height);
+      background: #fff;
+      border-top: 1px solid #e0e0e0;
+      display: flex;
+      z-index: 100;
+    }
+    .tab-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab-btn .icon { font-size: 20px; }
+    .tab-btn .tab-label { font-size: 10px; color: #aaa; }
+    .tab-btn.active .tab-label { color: var(--green-500); font-weight: 700; }
+
+    /* ── 通用工具 ── */
+    .row { display: flex; gap: 8px; }
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--green-800);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .content-area { flex: 1; padding: 12px; background: var(--page-bg); overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+  <!-- 行程 -->
+  <section id="page-schedule" class="page active">
+    <div class="page-header">
+      <div class="label">2026 夏・北海道</div>
+      <h1>行程規劃</h1>
+      <div class="subtitle">佔位文字</div>
+    </div>
+    <div class="content-area"><p style="color:#aaa;">行程內容（Task 3–4）</p></div>
+  </section>
+
+  <!-- 住宿 -->
+  <section id="page-hotel" class="page">
+    <div class="page-header">
+      <div class="label">🏨 住宿資訊</div>
+      <h1>4間住宿・5晚</h1>
+    </div>
+    <div class="content-area"><p style="color:#aaa;">住宿內容（Task 5）</p></div>
+  </section>
+
+  <!-- 行李 -->
+  <section id="page-baggage" class="page">
+    <div class="page-header">
+      <div class="label">🎒 行李清單</div>
+      <h1>出發前確認</h1>
+    </div>
+    <div class="content-area"><p style="color:#aaa;">行李內容（Task 6）</p></div>
+  </section>
+
+  <!-- 天氣 -->
+  <section id="page-weather" class="page">
+    <div class="page-header">
+      <div class="label">🌤️ 天氣參考</div>
+      <h1>8月下旬氣候</h1>
+    </div>
+    <div class="content-area"><p style="color:#aaa;">天氣內容（Task 7）</p></div>
+  </section>
+
+  <!-- Tab Bar -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-target="page-schedule">
+      <span class="icon">📅</span><span class="tab-label">行程</span>
+    </button>
+    <button class="tab-btn" data-target="page-hotel">
+      <span class="icon">🏨</span><span class="tab-label">住宿</span>
+    </button>
+    <button class="tab-btn" data-target="page-baggage">
+      <span class="icon">🎒</span><span class="tab-label">行李</span>
+    </button>
+    <button class="tab-btn" data-target="page-weather">
+      <span class="icon">🌤️</span><span class="tab-label">天氣</span>
+    </button>
+  </nav>
+
+  <script>
+    // Tab 切換
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.target).classList.add('active');
+      });
+    });
+  </script>
+
+</body>
+</html>
