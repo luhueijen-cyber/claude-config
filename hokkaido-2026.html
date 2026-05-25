@@ -264,6 +264,23 @@
     .weather-item-value { font-size: 12px; color: #333; margin-top: 2px; font-weight: 500; }
     .weather-tip { margin-top: 10px; font-size: 11px; color: #555; background: var(--green-50); border-radius: 7px; padding: 8px 10px; border-left: 3px solid var(--green-300); }
 
+    /* ── 換算工具 ── */
+    .rate-badge { display: inline-block; background: var(--green-100); color: var(--green-800); font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; margin-top: 6px; }
+    .conv-card { background: var(--card-bg); border-radius: 14px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); padding: 16px; margin-bottom: 12px; }
+    .conv-label { font-size: 11px; font-weight: 700; color: var(--text-secondary); margin-bottom: 6px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .conv-input-row { display: flex; align-items: center; gap: 8px; }
+    .conv-currency { font-size: 18px; font-weight: 700; color: var(--green-800); min-width: 36px; }
+    .conv-input { flex: 1; border: 1.5px solid var(--green-200); border-radius: 8px; padding: 10px 12px; font-size: 20px; font-weight: 700; color: #333; background: var(--green-50); outline: none; width: 100%; }
+    .conv-input:focus { border-color: var(--green-500); background: #fff; }
+    .conv-arrow { text-align: center; font-size: 20px; color: var(--green-300); margin: 8px 0; }
+    .conv-result { font-size: 26px; font-weight: 700; color: var(--green-800); padding: 10px 12px; background: var(--green-50); border-radius: 8px; letter-spacing: 0.5px; }
+    .conv-result-unit { font-size: 13px; font-weight: 400; color: var(--text-muted); margin-left: 4px; }
+    .quick-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin: 16px 0 8px; }
+    .quick-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .quick-item { background: var(--card-bg); border-radius: 10px; padding: 10px 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.07); }
+    .quick-jpy { font-size: 13px; font-weight: 700; color: var(--green-800); }
+    .quick-twd { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
   </style>
 </head>
 <body>
@@ -753,6 +770,45 @@
     </div>
   </section>
 
+  <!-- 換算 -->
+  <section id="page-currency" class="page">
+    <div class="page-header">
+      <div class="label">Currency</div>
+      <h1>台幣 ⇄ 日圓</h1>
+      <div class="subtitle">即時匯率請出發前確認</div>
+      <div class="rate-badge" id="rate-display">載入中...</div>
+    </div>
+    <div class="content-area">
+
+      <!-- TWD → JPY -->
+      <div class="conv-card">
+        <div class="conv-label">台幣 → 日圓</div>
+        <div class="conv-input-row">
+          <span class="conv-currency">NT$</span>
+          <input class="conv-input" id="input-twd" type="number" inputmode="decimal" placeholder="0" min="0">
+        </div>
+        <div class="conv-arrow">↓</div>
+        <div class="conv-result" id="result-jpy">— <span class="conv-result-unit">JPY</span></div>
+      </div>
+
+      <!-- JPY → TWD -->
+      <div class="conv-card">
+        <div class="conv-label">日圓 → 台幣</div>
+        <div class="conv-input-row">
+          <span class="conv-currency">¥</span>
+          <input class="conv-input" id="input-jpy" type="number" inputmode="decimal" placeholder="0" min="0">
+        </div>
+        <div class="conv-arrow">↓</div>
+        <div class="conv-result" id="result-twd">— <span class="conv-result-unit">TWD</span></div>
+      </div>
+
+      <!-- 常用金額 -->
+      <div class="quick-title">常用金額參考</div>
+      <div class="quick-grid" id="quick-grid"></div>
+
+    </div>
+  </section>
+
   <!-- Tab Bar -->
   <nav class="tab-bar">
     <button class="tab-btn active" data-target="page-schedule">
@@ -766,6 +822,9 @@
     </button>
     <button class="tab-btn" data-target="page-weather">
       <span class="icon">🌤️</span><span class="tab-label">天氣</span>
+    </button>
+    <button class="tab-btn" data-target="page-currency">
+      <span class="icon">💴</span><span class="tab-label">換算</span>
     </button>
   </nav>
 
@@ -820,6 +879,63 @@
       });
 
       load();
+    })();
+
+    // 台幣 ⇄ 日圓換算
+    (function() {
+      const RATE_KEY = 'hokkaido2026_jpyrate';
+      const DEFAULT_RATE = 4.59; // 1 TWD = 4.59 JPY（出發前請更新）
+
+      let rate = parseFloat(localStorage.getItem(RATE_KEY)) || DEFAULT_RATE;
+
+      const rateDisplay = document.getElementById('rate-display');
+      const inputTwd = document.getElementById('input-twd');
+      const inputJpy = document.getElementById('input-jpy');
+      const resultJpy = document.getElementById('result-jpy');
+      const resultTwd = document.getElementById('result-twd');
+      const quickGrid = document.getElementById('quick-grid');
+
+      const QUICK_AMOUNTS = [500, 1000, 3000, 5000, 10000, 20000, 50000, 100000];
+
+      function fmt(n) {
+        return Math.round(n).toLocaleString();
+      }
+
+      function renderRate() {
+        rateDisplay.textContent = '1 TWD ≈ ' + rate.toFixed(2) + ' JPY';
+      }
+
+      function renderQuick() {
+        quickGrid.innerHTML = '';
+        QUICK_AMOUNTS.forEach(jpy => {
+          const twd = (jpy / rate).toFixed(0);
+          const el = document.createElement('div');
+          el.className = 'quick-item';
+          el.innerHTML = '<div class="quick-jpy">¥' + fmt(jpy) + '</div><div class="quick-twd">≈ NT$' + fmt(twd) + '</div>';
+          quickGrid.appendChild(el);
+        });
+      }
+
+      inputTwd.addEventListener('input', () => {
+        const v = parseFloat(inputTwd.value);
+        if (isNaN(v) || inputTwd.value === '') {
+          resultJpy.innerHTML = '— <span class="conv-result-unit">JPY</span>';
+        } else {
+          resultJpy.innerHTML = '¥' + fmt(v * rate) + ' <span class="conv-result-unit">JPY</span>';
+        }
+      });
+
+      inputJpy.addEventListener('input', () => {
+        const v = parseFloat(inputJpy.value);
+        if (isNaN(v) || inputJpy.value === '') {
+          resultTwd.innerHTML = '— <span class="conv-result-unit">TWD</span>';
+        } else {
+          resultTwd.innerHTML = 'NT$' + fmt(v / rate) + ' <span class="conv-result-unit">TWD</span>';
+        }
+      });
+
+      renderRate();
+      renderQuick();
     })();
   </script>
 
