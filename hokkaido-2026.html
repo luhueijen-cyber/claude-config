@@ -214,6 +214,43 @@
     }
     .hotel-btn:active { background: var(--green-100); }
 
+    .progress-bar-wrap { margin-top: 10px; }
+    .progress-info { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .progress-info span { font-size: 10px; color: rgba(255,255,255,0.8); }
+    .progress-info strong { color: #fff; font-size: 10px; }
+    .progress-track { background: rgba(255,255,255,0.2); border-radius: 4px; height: 6px; }
+    .progress-fill { background: var(--green-200); border-radius: 4px; height: 6px; transition: width 0.3s ease; }
+    .bag-section-label { font-size: 10px; font-weight: 700; color: var(--green-800); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+    .bag-list { background: #fff; border-radius: 10px; overflow: hidden; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+    .bag-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 11px 12px;
+      border-bottom: 1px solid #f5f5f5;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bag-item:last-child { border-bottom: none; }
+    .bag-item.checked .bag-text { color: #bbb; text-decoration: line-through; }
+    .bag-check {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #ccc;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .bag-item.checked .bag-check { background: var(--green-500); border-color: var(--green-500); }
+    .bag-check-icon { color: #fff; font-size: 11px; display: none; }
+    .bag-item.checked .bag-check-icon { display: block; }
+    .bag-text { font-size: 12px; color: #333; }
+    .bag-tip { font-size: 10px; color: var(--green-500); margin-top: 2px; }
+
   </style>
 </head>
 <body>
@@ -562,8 +599,62 @@
     <div class="page-header">
       <div class="label">🎒 行李清單</div>
       <h1>出發前確認</h1>
+      <div class="progress-bar-wrap">
+        <div class="progress-info">
+          <span>已打包</span>
+          <strong id="bag-count">0 / 0 項</strong>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" id="bag-progress" style="width:0%"></div>
+        </div>
+      </div>
     </div>
-    <div class="content-area"><p style="color:#aaa;">行李內容（Task 6）</p></div>
+    <div class="content-area">
+
+      <div class="bag-section-label">📋 證件 &amp; 票券</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="passport"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">護照（有效期 6 個月以上）</div></div></div>
+        <div class="bag-item" data-key="ticket"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">機票電子票（JX850 / JX861）</div></div></div>
+        <div class="bag-item" data-key="insurance"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">旅遊平安保險證明</div></div></div>
+        <div class="bag-item" data-key="creditcard"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">信用卡（Visa / Master）</div></div></div>
+        <div class="bag-item" data-key="yen"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">日幣現金</div><div class="bag-tip">💡 北海道鄉下多不收信用卡</div></div></div>
+      </div>
+
+      <div class="bag-section-label">🔌 電子 &amp; 通訊</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="sim"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">日本 SIM 卡 / eSIM（預先設定好）</div></div></div>
+        <div class="bag-item" data-key="power-bank"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">行動電源（20000mAh）</div></div></div>
+        <div class="bag-item" data-key="camera"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">相機 + 記憶卡 + 充電器</div></div></div>
+        <div class="bag-item" data-key="adapter"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">旅行萬用轉接頭</div><div class="bag-tip">💡 日本插頭為兩孔扁平，台灣規格相容</div></div></div>
+        <div class="bag-item" data-key="earphones"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">耳機</div></div></div>
+      </div>
+
+      <div class="bag-section-label">👕 衣物</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="jacket"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">輕薄外套</div><div class="bag-tip">💡 北海道早晚約 18°C，白天 25°C</div></div></div>
+        <div class="bag-item" data-key="uv-top"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">防曬衣 / 薄長袖 × 2</div></div></div>
+        <div class="bag-item" data-key="tshirt"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">換洗 T-shirt × 5</div></div></div>
+        <div class="bag-item" data-key="pants"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">長褲 × 1、短褲 × 2</div></div></div>
+        <div class="bag-item" data-key="socks"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">襪子 × 6 雙</div></div></div>
+        <div class="bag-item" data-key="shoes"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">舒適步行鞋</div><div class="bag-tip">💡 函館坡道多，避免新鞋</div></div></div>
+      </div>
+
+      <div class="bag-section-label">🧴 盥洗 &amp; 醫療</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="medicine"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">常備藥（感冒、腸胃、止痛、暈車）</div></div></div>
+        <div class="bag-item" data-key="sunscreen"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">防曬乳 SPF 50+</div></div></div>
+        <div class="bag-item" data-key="personal-care"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">個人盥洗用品</div><div class="bag-tip">💡 Dormy Inn 提供洗髮精・沐浴乳</div></div></div>
+        <div class="bag-item" data-key="mask"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">口罩 × 10</div></div></div>
+      </div>
+
+      <div class="bag-section-label">💴 其他</div>
+      <div class="bag-list">
+        <div class="bag-item" data-key="coin-purse"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">零錢包</div><div class="bag-tip">💡 日本自動販賣機、神社香油錢多用零錢</div></div></div>
+        <div class="bag-item" data-key="eco-bag"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">環保購物袋 × 2</div></div></div>
+        <div class="bag-item" data-key="snacks"><div class="bag-check"><span class="bag-check-icon">✓</span></div><div><div class="bag-text">台灣零食（分送）</div></div></div>
+      </div>
+
+    </div>
   </section>
 
   <!-- 天氣 -->
@@ -602,6 +693,44 @@
         if (target) target.classList.add('active');
       });
     });
+
+    // 行李清單 localStorage
+    (function() {
+      const STORE_KEY = 'hokkaido2026_baggage';
+      const items = document.querySelectorAll('.bag-item');
+      const countEl = document.getElementById('bag-count');
+      const progressEl = document.getElementById('bag-progress');
+      const total = items.length;
+
+      function save() {
+        const checked = [...items].filter(i => i.classList.contains('checked')).map(i => i.dataset.key);
+        localStorage.setItem(STORE_KEY, JSON.stringify(checked));
+      }
+
+      function updateProgress() {
+        const done = [...items].filter(i => i.classList.contains('checked')).length;
+        countEl.textContent = done + ' / ' + total + ' 項';
+        progressEl.style.width = (done / total * 100) + '%';
+      }
+
+      function load() {
+        const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+        items.forEach(item => {
+          if (saved.includes(item.dataset.key)) item.classList.add('checked');
+        });
+        updateProgress();
+      }
+
+      items.forEach(item => {
+        item.addEventListener('click', () => {
+          item.classList.toggle('checked');
+          save();
+          updateProgress();
+        });
+      });
+
+      load();
+    })();
   </script>
 
 </body>
